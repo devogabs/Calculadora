@@ -60,28 +60,51 @@ janela.mainloop()
 
 # Bom, vamos começar então:
 
-def soma(): # Definindo a primeira função (de muitas):
-    num1 = float(entrada1.get())
-    num2 = float(entrada2.get())
-    resultado = num1 + num2
-    label_resultado.config(text=f"Resultado: {resultado}")
+# Definindo funções
 
+def calcular():
+    try:
+        resultado = eval(visor.get()) # Avalia o que está no visor.
+        visor.delete(0, tk.END)
+        visor.insert(0, resultado) # Se der certo, imprime o resultado
+    except:
+        visor.delete(0, tk.END)
+        visor.insert(0, "Algo deu errado :(") # Minha versão do "Syntax Error"
+
+def limpar_visor():
+    visor.delete(0, tk.END) # Literalmente limpa o visor
+
+def atualizar_visores(texto):
+    current = visor.get()
+    visor.delete(0, tk.END)  # Limpar o visor
+    visor.insert(0, current + texto) # Atualiza o visor com a nova entrada na frente do q já tava lá antes
 # Criando a janela principal
 
 screen = tk.Tk()
 screen.title("Calculadora")
 
-# Criando os elementos que vão aparecer na tela (eu acho)
-entrada1 = tk.Entry(screen)
-entrada2 = tk.Entry(screen)
-botao_adicao = tk.Button(screen, text= "+", command= soma)
-label_resultado = tk.Label(screen, text= "Resultado: ")
+# Criando o Visor da Calculadora
+visor = tk.Entry(screen, width=16, font=("Verdana", 24), bd=10, relief="sunken", justify="right")
+visor.grid(row=0, column=0, columnspan=4)
 
-# Organizando os widgets com grid
-entrada1.grid(row=0, column=0)
-entrada2.grid(row=0, column=1)
-botao_adicao.grid(row=1, column=0, columnspan=2)
-label_resultado.grid(row=2, column=0, columnspan=2)
+# Botões principais
+botões = [
+    ('7', 1, 0), ('8', 1, 1), ('9', 1, 2), ('/', 1, 3),
+    ('4', 2, 0), ('5', 2, 1), ('6', 2, 2), ('*', 2, 3),
+    ('1', 3, 0), ('2', 3, 1), ('3', 3, 2), ('-', 3, 3),
+    ('0', 4, 0), ('.', 4, 1), ('+', 4, 2), ('=', 4, 3),
+    ('C', 5, 0)
+]
+
+# Fazendo com que apertar os botões realmente faça algo
+for (texto, linha, coluna) in botões:
+    if texto == "=":
+        b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=calcular)
+    elif texto == "C":
+        b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=limpar_visor)
+    else:
+        b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=lambda t=texto: atualizar_visores(t))
+    b.grid(row=linha, column=coluna)
 
 # Mantendo a janela aberta
 screen.mainloop()
