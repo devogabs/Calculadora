@@ -78,22 +78,28 @@ def atualizar_visores(texto):
     current = visor.get()
     visor.delete(0, tk.END)  # Limpar o visor
     visor.insert(0, current + texto) # Atualiza o visor com a nova entrada na frente do q já tava lá antes
+
+def apagar_digito(): # Ao apertar a flechinha ("<-"), apaga o último dígito.
+    current = visor.get()
+    if current: # Verifica se tem algum texto no visor
+        visor.delete(len(current) - 1, tk.END) # Apaga só o último número
+
 # Criando a janela principal
 
 screen = tk.Tk()
 screen.title("Calculadora")
 
 # Criando o Visor da Calculadora
-visor = tk.Entry(screen, width=16, font=("Verdana", 24), bd=10, relief="sunken", justify="right")
-visor.grid(row=0, column=0, columnspan=4)
+visor = tk.Entry(screen, width=24, font=("Verdana", 24), bd=10, relief="sunken", justify="right")
+visor.grid(row=0, column=0, columnspan=4, rowspan= 1)
 
 # Botões principais
 botões = [
-    ('7', 1, 0), ('8', 1, 1), ('9', 1, 2), ('/', 1, 3),
-    ('4', 2, 0), ('5', 2, 1), ('6', 2, 2), ('*', 2, 3),
-    ('1', 3, 0), ('2', 3, 1), ('3', 3, 2), ('-', 3, 3),
-    ('0', 4, 0), ('.', 4, 1), ('+', 4, 2), ('=', 4, 3),
-    ('C', 5, 0)
+    ("C", 1, 0), ("<-", 1, 1), ("%", 1, 2), ("/", 1, 3),
+    ('7', 2, 0), ('8', 2, 1), ('9', 2, 2), ('*', 2, 3),
+    ('4', 3, 0), ('5', 3, 1), ('6', 3, 2), ('-', 3, 3),
+    ('1', 4, 0), ('2', 4, 1), ('3', 4, 2), ('+', 4, 3),
+    ('sexo', 5, 0), ('0', 5, 1), ('.', 5, 2), ('=', 5, 3)
 ]
 
 # Fazendo com que apertar os botões realmente faça algo
@@ -102,6 +108,8 @@ for (texto, linha, coluna) in botões:
         b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=calcular)
     elif texto == "C":
         b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=limpar_visor)
+    elif texto == "<-":
+        b = tk.Button(screen, text=texto, width= 10, height = 3, font= ("Arial", 18), command=apagar_digito)
     else:
         b = tk.Button(screen, text=texto, width=10, height=3, font=("Arial", 18), command=lambda t=texto: atualizar_visores(t))
     b.grid(row=linha, column=coluna)
